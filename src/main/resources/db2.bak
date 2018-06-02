@@ -1,0 +1,62 @@
+
+	
+	<!-- ***********   2  多数据源配置 开始            ************** -->
+	
+	
+	<!-- c3p0 连接池 2 -->
+	<bean id="dataSource2" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${jdbc2.driver}"></property>
+		<property name="jdbcUrl" value="${jdbc2.url}"></property>
+		<property name="user" value="${jdbc2.username}"></property>
+		<property name="password" value="${jdbc2.password}"></property>
+	</bean>
+	<!-- Hibernate SessionFactory 2 -->
+	<bean id="sessionFactory2"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource2" ref="dataSource2" />
+		<!-- 自动扫描注解方式配置的hibernate类文件 -->
+		<property name="packagesToScan" value="abc.domain"></property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">${jdbc2.dialect}</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.format_sql">false</prop>
+				<prop key="hibernate.generate_statistics">false</prop>
+				<prop key="hibernate.autoReconnect">true</prop>
+				<prop key="hibernate.max_fech_depth">5</prop>
+				<prop key="hibernate.jdbc.batch_size">50</prop>
+				<prop key="hibernate.jdbc.fetch_size">100</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- 配置事务管理器 2 -->
+	<bean id="transactionManager2"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+	<property name="sessionFactory2" ref="sessionFactory2"></property>
+	</bean>
+		<!-- 配置服务层，拦截器方式配置事物 2 -->
+	<tx:advice id="transactionAdvice2" transaction-manager="transactionManager2">
+		<tx:attributes>
+			<tx:method name="add*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="modify*" propagation="REQUIRED" />
+			<tx:method name="edit*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="remove*" propagation="REQUIRED" />
+			<tx:method name="get*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="find*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="load*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="search*" propagation="REQUIRED" read-only="true" />
+			<tx:method name="batchSave*" propagation="NEVER" read-only="true" />
+			<tx:method name="*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<aop:config> <!-- 事务是否应该设在 DAO 层? -->
+		<aop:pointcut id="transactionPointcut2" expression="execution(* abc..service..*Impl.*(..))" />
+		<aop:advisor pointcut-ref="transactionPointcut2" advice-ref="transactionAdvice2" />
+	</aop:config>
+	
+	
+	

@@ -1,0 +1,45 @@
+@CHARSET "UTF-8";
+.nav, a {
+	color: #00f;
+}
+
+body, input {
+	font-size: 12px;
+	margin: 0;
+}
+
+#wrapper {
+	overflow: hidden;
+}
+
+#content {
+	width: 486px;
+	margin-right: 10px;
+	float: left;
+	min-height: 1200px;
+}
+
+#sidebar {
+	font-size: 12px;
+	color: #666;
+	border: solid 1px #ddd;
+	width: 280px;
+	background: #fff;
+	padding: 10px;
+	float: right;
+	height: 200px;
+}
+
+#portamento_container {
+	float: right;
+	position: relative;
+}
+
+#portamento_container #sidebar {
+	float: none;
+	position: absolute;
+}
+
+#portamento_container #sidebar.fixed {
+	position: fixed;
+}
